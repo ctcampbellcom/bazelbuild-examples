@@ -96,6 +96,7 @@ jobs:
       shell: bash
       run: |
         cd cpp-tutorial/stage1
+        bazel clean --expunge
         bazel build //main:hello-world
 
     - name: Perform CodeQL Analysis
