@@ -32,10 +32,8 @@ jobs:
     permissions:
       # required for all workflows
       security-events: write
-
       # required to fetch internal or private CodeQL packs
       packages: read
-
       # only required for workflows in private repositories
       actions: read
       contents: read
@@ -48,7 +46,7 @@ jobs:
           build-mode: manual
           folder: cpp-tutorial/stage1
         - language: java-kotlin
-          build-mode: autobuild
+          build-mode: manual
           folder: java-maven
         - language: javascript-typescript
           build-mode: none
@@ -83,6 +81,14 @@ jobs:
         cd ${{ matrix.folder }}
         bazel clean --expunge
         bazel build //main:hello-world
+
+    - name: Java Maven Bazel build
+      if: matrix.build-mode == 'manual' && matrix.language == 'java-kotlin'
+      shell: bash
+      run: |
+        cd ${{ matrix.folder }}
+        bazel clean --expunge
+        bazel build :java-maven
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v3
